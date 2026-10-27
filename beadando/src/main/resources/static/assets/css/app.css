@@ -67,3 +67,51 @@ td.num, th.num {
     font-size: 0.75em;
     margin-top: 1em;
 }
+
+/* Üzenetek: a dátum ne törjön, a hosszú üzenet sortörései megmaradjanak */
+table.uzenetek td.ido {
+    white-space: nowrap;
+}
+
+table.uzenetek td.szoveg {
+    white-space: pre-line;
+    min-width: 16em;
+}
+
+table.uzenetek .felhasznalo {
+    font-size: 0.8em;
+    opacity: 0.7;
+}
+
+/* Üzenetek mobilon: a táblázat sorai kártyaként jelennek meg (nincs vízszintes görgetés) */
+@media screen and (max-width: 736px) {
+    table.uzenetek thead {
+        display: none;
+    }
+
+    table.uzenetek tr,
+    table.uzenetek td {
+        display: block;
+    }
+
+    table.uzenetek tr {
+        padding: 0.75em 0;
+    }
+
+    table.uzenetek td {
+        padding: 0.25em 0.75em;
+    }
+
+    table.uzenetek td.szoveg {
+        min-width: 0;
+    }
+
+    table.uzenetek td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7em;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        opacity: 0.6;
+    }
+}

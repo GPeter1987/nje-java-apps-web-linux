@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Üzenetek')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>Üzenetek</h1>
+                </header>
+                <p>A <a th:href="@{/kapcsolat}">Kapcsolat</a> űrlapon küldött üzenetek, a legfrissebb elöl.
+                    Összesen <strong th:text="${uzenetek.size()}">0</strong> üzenet.</p>
+
+                <p th:if="${uzenetek.isEmpty()}">Még nem érkezett üzenet.</p>
+
+                <div class="table-wrapper" th:unless="${uzenetek.isEmpty()}">
+                    <table class="uzenetek">
+                        <thead>
+                        <tr>
+                            <th>Küldés ideje</th>
+                            <th>Feladó</th>
+                            <th>Tárgy</th>
+                            <th>Üzenet</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="u : ${uzenetek}">
+                            <td class="ido" data-label="Küldés ideje" th:text="${#temporals.format(u.kuldesIdeje, 'yyyy.MM.dd. HH:mm')}">2026.10.27. 21:30</td>
+                            <td data-label="Feladó">
+                                <span th:text="${u.nev}">Név</span><br/>
+                                <a th:href="'mailto:' + ${u.email}" th:text="${u.email}">email</a>
+                                <span class="felhasznalo" th:if="${u.felhasznalo}"
+                                      th:text="'(' + ${u.felhasznalo} + ')'">(felhasználó)</span>
+                            </td>
+                            <td data-label="Tárgy" th:text="${u.targy}">Tárgy</td>
+                            <td class="szoveg" data-label="Üzenet" th:text="${u.szoveg}">Üzenet</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
