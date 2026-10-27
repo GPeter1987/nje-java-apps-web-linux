@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Főoldal')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+
+    <header th:replace="~{fragments/layout :: header-alt}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <!-- Banner -->
+    <section id="banner" class="major">
+        <div class="inner">
+            <header class="major">
+                <h1>NB I. labdarúgók</h1>
+            </header>
+            <div class="content">
+                <p>Az első osztályú magyar labdarúgó-bajnokság<br/>
+                    klubjai, posztjai és játékoskeretei.</p>
+                <ul class="actions">
+                    <li><a href="#one" class="button next scrolly">Tovább</a></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- TODO (A - Főoldal): látványos bemutató, klubcsempék, focis képek -->
+    <div id="main">
+        <section id="one" class="tiles">
+            <article>
+                <span class="image"><img th:src="@{/images/pic01.jpg}" alt=""/></span>
+                <header class="major">
+                    <h3><a th:href="@{/adatbazis}" class="link">Adatbázis</a></h3>
+                    <p>Klubok, posztok, játékosok</p>
+                </header>
+            </article>
+            <article>
+                <span class="image"><img th:src="@{/images/pic02.jpg}" alt=""/></span>
+                <header class="major">
+                    <h3><a th:href="@{/diagram}" class="link">Diagram</a></h3>
+                    <p>Statisztikák Chart.js-sel</p>
+                </header>
+            </article>
+            <article>
+                <span class="image"><img th:src="@{/images/pic03.jpg}" alt=""/></span>
+                <header class="major">
+                    <h3><a th:href="@{/kapcsolat}" class="link">Kapcsolat</a></h3>
+                    <p>Írjon nekünk üzenetet</p>
+                </header>
+            </article>
+            <article>
+                <span class="image"><img th:src="@{/images/pic04.jpg}" alt=""/></span>
+                <header class="major">
+                    <h3><a th:href="@{/rest}" class="link">REST API</a></h3>
+                    <p>JSON végpontok</p>
+                </header>
+            </article>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

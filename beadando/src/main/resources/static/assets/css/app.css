@@ -1,0 +1,21 @@
+/* Saját kiegészítések a Forty témához */
+
+/* Szerver oldali validációs hibák */
+.field-error {
+    color: #ec8d81;
+    font-size: 0.8em;
+    margin-top: 0.25em;
+}
+
+.alert-success {
+    color: #9bf1ff;
+}
+
+.alert-error {
+    color: #ec8d81;
+}
+
+/* Számok jobbra igazítva a táblázatokban */
+td.num, th.num {
+    text-align: right;
+}

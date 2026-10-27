@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- Minta egy új aloldalhoz: másoljuk le, nevezzük át, és írjuk át a tartalmát. -->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Oldal címe')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>Oldal címe</h1>
+                </header>
+                <p>Tartalom. Táblázathoz: &lt;div class="table-wrapper"&gt;&lt;table&gt;...,
+                    űrlaphoz: &lt;div class="fields"&gt;&lt;div class="field half"&gt;... (lásd a Forty elements.html-t).</p>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--
+    Közös layout fragmentek a Forty (HTML5 UP, CCA 3.0) témához.
+
+    Egy új oldal váza (lásd: oldal-minta.html):
+      <head th:replace="~{fragments/layout :: head('Oldal címe')}"></head>
+      <body class="is-preload">
+        <div id="wrapper">
+          <header th:replace="~{fragments/layout :: header}"></header>
+          <nav th:replace="~{fragments/layout :: menu}"></nav>
+          <div id="main" class="alt"> ... saját tartalom ... </div>
+          <footer th:replace="~{fragments/layout :: footer}"></footer>
+        </div>
+        <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+      </body>
+
+    Linkeknél mindig @{/...} formát használjunk, mert a szerveren az alkalmazás
+    a /neptunkod/ context path alatt fut.
+-->
+<html lang="hu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="head(title)">
+    <title th:text="${title} + ' | NB I.'">NB I.</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" th:href="@{/assets/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/app.css}"/>
+    <noscript><link rel="stylesheet" th:href="@{/assets/css/noscript.css}"/></noscript>
+</head>
+
+<body>
+
+<!-- Fejléc; a főoldalon az "alt" osztállyal átlátszó -->
+<header id="header" th:fragment="header">
+    <a th:href="@{/}" class="logo"><strong>NB I.</strong> <span>Labdarúgó adatbázis</span></a>
+    <nav>
+        <a href="#menu">Menü</a>
+    </nav>
+</header>
+
+<header id="header" class="alt" th:fragment="header-alt">
+    <a th:href="@{/}" class="logo"><strong>NB I.</strong> <span>Labdarúgó adatbázis</span></a>
+    <nav>
+        <a href="#menu">Menü</a>
+    </nav>
+</header>
+
+<!-- Menü: látogató / regisztrált felhasználó / admin szerint -->
+<nav id="menu" th:fragment="menu">
+    <ul class="links">
+        <li><a th:href="@{/}">Főoldal</a></li>
+        <li><a th:href="@{/adatbazis}">Adatbázis</a></li>
+        <li><a th:href="@{/kapcsolat}">Kapcsolat</a></li>
+        <li><a th:href="@{/diagram}">Diagram</a></li>
+        <li><a th:href="@{/rest}">REST</a></li>
+        <li sec:authorize="isAuthenticated()"><a th:href="@{/uzenetek}">Üzenetek</a></li>
+        <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/crud}">CRUD</a></li>
+    </ul>
+    <ul class="actions stacked" sec:authorize="isAnonymous()">
+        <li><a th:href="@{/login}" class="button primary fit">Bejelentkezés</a></li>
+        <li><a th:href="@{/register}" class="button fit">Regisztráció</a></li>
+    </ul>
+    <div sec:authorize="isAuthenticated()">
+        <p>Bejelentkezve: <strong sec:authentication="name"></strong></p>
+        <form th:action="@{/logout}" method="post">
+            <ul class="actions stacked">
+                <li><input type="submit" value="Kijelentkezés" class="button fit"/></li>
+            </ul>
+        </form>
+    </div>
+</nav>
+
+<!-- Lábléc: a készítők neve és Neptun-kódja minden oldalon -->
+<footer id="footer" th:fragment="footer">
+    <div class="inner">
+        <ul class="copyright">
+            <li>Készítette: Gaál Péter (NEPTUN-A)</li>
+            <li>Társ Neve (NEPTUN-B)</li>
+            <li>Design: <a href="https://html5up.net">HTML5 UP</a> (Forty)</li>
+        </ul>
+    </div>
+</footer>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/assets/js/jquery.min.js}"></script>
+    <script th:src="@{/assets/js/jquery.scrolly.min.js}"></script>
+    <script th:src="@{/assets/js/jquery.scrollex.min.js}"></script>
+    <script th:src="@{/assets/js/browser.min.js}"></script>
+    <script th:src="@{/assets/js/breakpoints.min.js}"></script>
+    <script th:src="@{/assets/js/util.js}"></script>
+    <script th:src="@{/assets/js/main.js}"></script>
+</th:block>
+
+</body>
+</html>
