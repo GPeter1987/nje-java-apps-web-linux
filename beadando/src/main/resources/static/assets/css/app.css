@@ -19,3 +19,51 @@
 td.num, th.num {
     text-align: right;
 }
+
+/* Főoldal: saját banner kép (Puskás Aréna) */
+#banner {
+    background-image: url("../../images/nb1/banner.jpg");
+}
+
+/* Főoldal: kiemelt számok */
+.stat-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 2em;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.stat-list li {
+    flex: 1 1 10em;
+    padding: 0;
+}
+
+.stat-list strong {
+    display: block;
+    font-size: 2.75em;
+    line-height: 1.2;
+    color: #9bf1ff;
+}
+
+.stat-list span {
+    font-size: 0.8em;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* Főoldal: képforrások */
+#kepforrasok summary {
+    cursor: pointer;
+    font-size: 0.8em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.kepforrasok {
+    font-size: 0.75em;
+    margin-top: 1em;
+}
