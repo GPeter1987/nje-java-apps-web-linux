@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Regisztráció')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>Regisztráció</h1>
+                </header>
+                <p>Regisztrált látogatóként megtekintheti a Kapcsolat űrlapon küldött üzeneteket.</p>
+
+                <form th:action="@{/register}" th:object="${form}" method="post" novalidate>
+                    <div class="fields">
+                        <div class="field">
+                            <label for="username">Felhasználónév</label>
+                            <input type="text" th:field="*{username}" id="username"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+                        </div>
+                        <div class="field half">
+                            <label for="password">Jelszó</label>
+                            <input type="password" th:field="*{password}" id="password"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        </div>
+                        <div class="field half">
+                            <label for="passwordAgain">Jelszó még egyszer</label>
+                            <input type="password" th:field="*{passwordAgain}" id="passwordAgain"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('passwordAgain')}" th:errors="*{passwordAgain}"></div>
+                            <div class="field-error" th:if="${#fields.hasErrors('passwordsMatch')}" th:errors="*{passwordsMatch}"></div>
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li><input type="submit" value="Regisztráció" class="primary"/></li>
+                        <li><a th:href="@{/login}" class="button">Már van fiókom</a></li>
+                    </ul>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
