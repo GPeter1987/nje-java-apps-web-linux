@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Kapcsolat')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>Kapcsolat</h1>
+                </header>
+                <p>Kérdése vagy észrevétele van az NB I. adataival kapcsolatban? Írjon nekünk!
+                    Minden mező kitöltése kötelező.</p>
+
+                <p class="alert-success" th:if="${siker}">Köszönjük, üzenetét elmentettük.
+                    <span sec:authorize="isAuthenticated()">Az <a th:href="@{/uzenetek}">Üzenetek</a> menüben már látható.</span>
+                    <span sec:authorize="isAnonymous()">A beküldött üzeneteket
+                        <a th:href="@{/register}">regisztráció</a> után az Üzenetek menüben láthatja.</span>
+                </p>
+
+                <form th:action="@{/kapcsolat}" th:object="${form}" method="post" novalidate>
+                    <div class="fields">
+                        <div class="field half">
+                            <label for="nev">Név</label>
+                            <input type="text" th:field="*{nev}" id="nev" maxlength="100"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('nev')}" th:errors="*{nev}"></div>
+                        </div>
+                        <div class="field half">
+                            <label for="email">E-mail</label>
+                            <input type="email" th:field="*{email}" id="email" maxlength="100"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                        </div>
+                        <div class="field">
+                            <label for="targy">Tárgy</label>
+                            <input type="text" th:field="*{targy}" id="targy" maxlength="100"/>
+                            <div class="field-error" th:if="${#fields.hasErrors('targy')}" th:errors="*{targy}"></div>
+                        </div>
+                        <div class="field">
+                            <label for="szoveg">Üzenet</label>
+                            <textarea th:field="*{szoveg}" id="szoveg" rows="6" maxlength="2000"></textarea>
+                            <div class="field-error" th:if="${#fields.hasErrors('szoveg')}" th:errors="*{szoveg}"></div>
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li><input type="submit" value="Küldés" class="primary"/></li>
+                        <li><input type="reset" value="Törlés"/></li>
+                    </ul>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
