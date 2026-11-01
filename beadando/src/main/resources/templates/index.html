@@ -11,49 +11,139 @@
     <section id="banner" class="major">
         <div class="inner">
             <header class="major">
-                <h1>NB I. labdarúgók</h1>
+                <h1>NB I. – a magyar foci élvonala</h1>
             </header>
             <div class="content">
-                <p>Az első osztályú magyar labdarúgó-bajnokság<br/>
-                    klubjai, posztjai és játékoskeretei.</p>
+                <p>12 klub, 14 poszt és <span th:text="${jatekosokSzama}">318</span> labdarúgó<br/>
+                    egy helyen: keretek, értékek, statisztikák.</p>
                 <ul class="actions">
-                    <li><a href="#one" class="button next scrolly">Tovább</a></li>
+                    <li><a href="#klubok" class="button next scrolly">A klubok</a></li>
                 </ul>
             </div>
         </div>
     </section>
 
-    <!-- TODO (A - Főoldal): látványos bemutató, klubcsempék, focis képek -->
     <div id="main">
-        <section id="one" class="tiles">
-            <article>
-                <span class="image"><img th:src="@{/images/pic01.jpg}" alt=""/></span>
+
+        <!-- Számok -->
+        <section id="szamok">
+            <div class="inner">
+                <ul class="stat-list">
+                    <li>
+                        <strong th:text="${klubok.size()}">12</strong>
+                        <span>klub</span>
+                    </li>
+                    <li>
+                        <strong th:text="${jatekosokSzama}">318</strong>
+                        <span>labdarúgó</span>
+                    </li>
+                    <li>
+                        <strong th:text="${#numbers.formatDecimal(osszertek / 1000.0, 1, 'WHITESPACE', 1, 'COMMA')} + ' M€'">60,2 M€</strong>
+                        <span>összesített piaci érték</span>
+                    </li>
+                    <li>
+                        <strong th:text="${kulfoldiArany} + '%'">31%</strong>
+                        <span>külföldi állampolgár</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Klubok csempékben, keretérték szerinti sorrendben -->
+        <section id="klubok" class="tiles">
+            <article th:each="k : ${klubok}">
+                <span class="image">
+                    <img th:src="@{${k.kep()}}" th:alt="${k.klub().csapatnev}"/>
+                </span>
                 <header class="major">
-                    <h3><a th:href="@{/adatbazis}" class="link">Adatbázis</a></h3>
-                    <p>Klubok, posztok, játékosok</p>
+                    <h3><a th:href="@{/adatbazis(klub=${k.klub().id})}" class="link"
+                           th:text="${k.klub().csapatnev}">Klub</a></h3>
+                    <p th:text="${k.jatekosokSzama()} + ' játékos · ' + ${#numbers.formatInteger(k.osszertek(), 1, 'WHITESPACE')} + ' ezer €'">
+                        26 játékos · 5 000 ezer €</p>
                 </header>
             </article>
-            <article>
-                <span class="image"><img th:src="@{/images/pic02.jpg}" alt=""/></span>
+        </section>
+
+        <!-- Bemutatkozás -->
+        <section id="bemutatas" class="spotlights">
+            <section>
+                <span class="image"><img th:src="@{/images/nb1/valogatott.jpg}" alt="A magyar válogatott"/></span>
+                <div class="content">
+                    <div class="inner">
+                        <header class="major">
+                            <h3>Az alkalmazásról</h3>
+                        </header>
+                        <p>Az oldal az első osztályú magyar labdarúgó-bajnokság (NB I.) klubjainak játékoskereteit
+                            mutatja be. Az adatok három táblából származnak: <em>klub</em>, <em>poszt</em> és
+                            <em>labdarugo</em>. A játékosok értéke euróezerben van megadva.
+                            A legnépesebb poszt: <strong th:text="${legnepesebbPoszt}">poszt</strong>.</p>
+                        <ul class="actions">
+                            <li><a th:href="@{/adatbazis}" class="button">Adatbázis</a></li>
+                            <li><a th:href="@{/diagram}" class="button">Diagramok</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Legértékesebb játékosok -->
+        <section id="sztarok">
+            <div class="inner">
                 <header class="major">
-                    <h3><a th:href="@{/diagram}" class="link">Diagram</a></h3>
-                    <p>Statisztikák Chart.js-sel</p>
+                    <h2>A legértékesebb játékosok</h2>
                 </header>
-            </article>
-            <article>
-                <span class="image"><img th:src="@{/images/pic03.jpg}" alt=""/></span>
-                <header class="major">
-                    <h3><a th:href="@{/kapcsolat}" class="link">Kapcsolat</a></h3>
-                    <p>Írjon nekünk üzenetet</p>
-                </header>
-            </article>
-            <article>
-                <span class="image"><img th:src="@{/images/pic04.jpg}" alt=""/></span>
-                <header class="major">
-                    <h3><a th:href="@{/rest}" class="link">REST API</a></h3>
-                    <p>JSON végpontok</p>
-                </header>
-            </article>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Név</th>
+                            <th>Klub</th>
+                            <th>Poszt</th>
+                            <th class="num">Érték (ezer €)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="l, st : ${legertekesebbek}">
+                            <td th:text="${st.count}">1</td>
+                            <td th:text="${l.teljesNev}">Név</td>
+                            <td th:text="${l.klub.csapatnev}">Klub</td>
+                            <td th:text="${l.poszt.nev}">Poszt</td>
+                            <td class="num" th:text="${#numbers.formatInteger(l.ertek, 1, 'WHITESPACE')}">1 000</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ul class="actions">
+                    <li><a th:href="@{/kapcsolat}" class="button primary">Írjon nekünk</a></li>
+                    <li><a th:href="@{/rest}" class="button">REST API</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Képek forrása (a CC BY / CC BY-SA licencek miatt kötelező feltüntetni) -->
+        <section id="kepforrasok">
+            <div class="inner">
+                <details>
+                    <summary>Képek forrása (Wikimedia Commons)</summary>
+                    <ul class="kepforrasok">
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Vasas-ZTE_20070428.jpg">Vasas-ZTE 20070428.jpg</a> – Vasas11 on Indafotó, <a href="https://creativecommons.org/licenses/by/2.5/hu/deed.en">CC BY 2.5 hu</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Groupama_Arena_Budapest.jpg">Groupama Arena Budapest.jpg</a> – Michał Bulsa, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Felcs%C3%BAt,_Pusk%C3%A1s_Akad%C3%A9mia_Pancho_Ar%C3%A9na,_12.jpg">Felcsút, Puskás Akadémia Pancho Aréna, 12.jpg</a> – Christo, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Debrecen_Nagyerdei_Stadion.jpg">Debrecen Nagyerdei Stadion.jpg</a> – KovacsDaniel, <a href="https://creativecommons.org/licenses/by/4.0">CC BY 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Bozsik_Stadion.jpg">Bozsik Stadion.jpg</a> – Salome mi, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Halad%C3%A1s_Sportkomplexum2017_10_12.jpg">Haladás Sportkomplexum2017 10 12.jpg</a> – Pan Peter12, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Feh%C3%A9rv%C3%A1ri_%C3%BAti_Stadion_(2018).jpg">Fehérvári úti Stadion (2018).jpg</a> – RuthStevens, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Mezokovesd_Zsory_stadion.jpg">Mezokovesd Zsory stadion.jpg</a> – Zemszo, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Miskolc_DVTK_Stadion_2026_9.jpg">Miskolc DVTK Stadion 2026 9.jpg</a> – Explicatory, <a href="http://creativecommons.org/publicdomain/zero/1.0/deed.en">CC0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Szuszastadion.jpg">Szuszastadion.jpg</a> – Gabute at English Wikipedia, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Balmaz_Stadion_.png">Balmaz Stadion .png</a> – Levente300, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:MOL_Ar%C3%A9na_S%C3%B3st%C3%B3.jpg">MOL Aréna Sóstó.jpg</a> – Osey95, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Pusk%C3%A1s_Ar%C3%A9na_06.jpg">Puskás Aréna 06.jpg</a> – OD Pictures, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                        <li><a href="https://commons.wikimedia.org/wiki/File:Magyar_v%C3%A1logatott.jpg">Magyar válogatott.jpg</a> – Elekes Andor, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a></li>
+                    </ul>
+                </details>
+            </div>
         </section>
     </div>
 

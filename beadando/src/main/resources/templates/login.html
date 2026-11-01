@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bejelentkezés')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+    <nav th:replace="~{fragments/layout :: menu}"></nav>
+
+    <div id="main" class="alt">
+        <section>
+            <div class="inner">
+                <header class="major">
+                    <h1>Bejelentkezés</h1>
+                </header>
+
+                <!-- AuthController: redirect:/login?registered -->
+                <p th:if="${param.registered}" class="alert-success">Sikeres regisztráció! Most már bejelentkezhet.</p>
+                <!-- Hibás bejelentkezés esetén: /login?error -->
+                <p th:if="${param.error}" class="alert-error">Hibás felhasználónév vagy jelszó!</p>
+
+                <form th:action="@{/login}" method="post">
+                    <div class="fields">
+                        <div class="field half">
+                            <label for="username">Felhasználónév</label>
+                            <input type="text" name="username" id="username" required autofocus/>
+                        </div>
+                        <div class="field half">
+                            <label for="password">Jelszó</label>
+                            <input type="password" name="password" id="password" required/>
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li><input type="submit" value="Bejelentkezés" class="primary"/></li>
+                        <li><a th:href="@{/register}" class="button">Még nincs fiókom</a></li>
+                    </ul>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
