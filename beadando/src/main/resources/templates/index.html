@@ -56,7 +56,7 @@
                     <img th:src="@{${k.kep()}}" th:alt="${k.klub().csapatnev}"/>
                 </span>
                 <header class="major">
-                    <h3><a th:href="@{/adatbazis(klub=${k.klub().id})}" class="link"
+                    <h3><a th:href="@{/adatbazis(klubId=${k.klub().id})}" class="link"
                            th:text="${k.klub().csapatnev}">Klub</a></h3>
                     <p th:text="${k.jatekosokSzama()} + ' játékos · ' + ${#numbers.formatInteger(k.osszertek(), 1, 'WHITESPACE')} + ' ezer €'">
                         26 játékos · 5 000 ezer €</p>

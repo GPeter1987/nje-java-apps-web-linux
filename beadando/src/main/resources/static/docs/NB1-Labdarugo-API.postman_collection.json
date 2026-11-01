@@ -1,11 +1,20 @@
 {
   "info": {
     "name": "NB I. labdarúgó REST API",
-    "description": "A beadandó /api/labdarugok végpontjainak példái. Alapértelmezett helyi cím: http://localhost:8080/nb1",
+    "description": "A beadandó /api/labdarugok végpontjainak példái. Alapértelmezett helyi cím: http://localhost:8080/nb1. A GET kérések azonosítás nélkül, a POST/PUT/DELETE kérések admin felhasználóval (HTTP Basic) hívhatók.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "{{adminUser}}", "type": "string" },
+      { "key": "password", "value": "{{adminPassword}}", "type": "string" }
+    ]
   },
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:8080/nb1" },
+    { "key": "adminUser", "value": "admin" },
+    { "key": "adminPassword", "value": "admin" },
     { "key": "labdarugoId", "value": "319" }
   ],
   "item": [

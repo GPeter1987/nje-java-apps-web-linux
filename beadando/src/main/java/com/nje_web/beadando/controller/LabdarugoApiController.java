@@ -91,8 +91,8 @@ public class LabdarugoApiController {
         labdarugo.setUtonev(request.utonev() == null || request.utonev().isBlank() ? null : request.utonev().trim());
         labdarugo.setVezeteknev(request.vezeteknev().trim());
         labdarugo.setSzulido(request.szulido());
-        labdarugo.setMagyar(request.magyar());
-        labdarugo.setKulfoldi(request.kulfoldi());
+        labdarugo.setMagyar(Boolean.TRUE.equals(request.magyar()));
+        labdarugo.setKulfoldi(Boolean.TRUE.equals(request.kulfoldi()));
         labdarugo.setErtek(request.ertek());
     }
 

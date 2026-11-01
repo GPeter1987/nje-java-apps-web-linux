@@ -58,12 +58,18 @@
                             <p class="field-error" th:if="${#fields.hasErrors('ertek')}" th:errors="*{ertek}"></p>
                         </div>
                         <div class="col-6 col-12-small">
-                            <input id="magyar" type="checkbox" th:field="*{magyar}"/>
+                            <!-- th:field helyett kézzel: a Forty a jelölőnégyzetet a közvetlenül utána álló
+                                 címkével rajzolja ki, a th:field által beszúrt rejtett mező ezt elrontaná -->
+                            <input id="magyar" type="checkbox" name="magyar" th:checked="*{magyar}"/>
                             <label for="magyar">Magyar játékos</label>
+                            <input type="hidden" name="_magyar" value="on"/>
                         </div>
                         <div class="col-6 col-12-small">
-                            <input id="kulfoldi" type="checkbox" th:field="*{kulfoldi}"/>
+                            <!-- th:field helyett kézzel: a Forty a jelölőnégyzetet a közvetlenül utána álló
+                                 címkével rajzolja ki, a th:field által beszúrt rejtett mező ezt elrontaná -->
+                            <input id="kulfoldi" type="checkbox" name="kulfoldi" th:checked="*{kulfoldi}"/>
                             <label for="kulfoldi">Külföldi játékos</label>
+                            <input type="hidden" name="_kulfoldi" value="on"/>
                         </div>
                         <div class="col-12">
                             <ul class="actions">

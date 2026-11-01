@@ -24,8 +24,9 @@ public record LabdarugoApiRequest(
         @NotNull(message = "A születési dátum megadása kötelező.")
         @Past(message = "A születési dátum csak múltbeli dátum lehet.")
         LocalDate szulido,
-        boolean magyar,
-        boolean kulfoldi,
+        // Nem kötelező mezők: ha kimaradnak a JSON-ból, false-nak számítanak
+        Boolean magyar,
+        Boolean kulfoldi,
         @NotNull(message = "Az érték megadása kötelező.")
         @Min(value = 0, message = "Az érték nem lehet negatív.")
         Integer ertek) {

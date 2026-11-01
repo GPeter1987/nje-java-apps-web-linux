@@ -1,14 +1,20 @@
 package com.nje_web.beadando.config;
 
 import com.nje_web.beadando.service.CustomUserDetailsService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 // A gyakorlati jegyzet "Autentikáció - Spring-Boot Security" fejezete alapján.
 // Eltérés a jegyzethez képest: a szerveren az alkalmazás a /neptunkod/ context path alatt fut,
@@ -52,6 +58,23 @@ public class WebSecurityConfig {
         };
     }
 
+    // Az útvonal a context path nélkül (a szerveren /neptunkod/api/... -> /api/...)
+    private static String utvonal(HttpServletRequest request) {
+        return request.getRequestURI().substring(request.getContextPath().length());
+    }
+
+    private static boolean apiKeres(HttpServletRequest request) {
+        return utvonal(request).startsWith("/api/");
+    }
+
+    // REST API: a böngészős átirányítás helyett 401 + WWW-Authenticate fejléc (cURL/Postman számára)
+    @Bean
+    public BasicAuthenticationEntryPoint apiAuthenticationEntryPoint() {
+        BasicAuthenticationEntryPoint entryPoint = new BasicAuthenticationEntryPoint();
+        entryPoint.setRealmName("NB1 REST API");
+        return entryPoint;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -61,11 +84,14 @@ public class WebSecurityConfig {
                 // A H2 konzol frame-eket használ
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .authorizeHttpRequests(auth -> auth
-                        // Statikus fájlok és hibaoldal
-                        .requestMatchers("/assets/**", "/images/**", "/error", "/h2-console/**").permitAll()
+                        // Statikus fájlok (a /docs alatt a Postman gyűjtemény) és hibaoldal
+                        .requestMatchers("/assets/**", "/images/**", "/docs/**", "/error", "/h2-console/**").permitAll()
+                        // REST API: olvasni bárki tud, módosítani (POST/PUT/DELETE) csak az admin
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        .requestMatchers("/api/**").hasRole("ADMIN")
                         // Látogató (nem bejelentkezett) menüpontjai
                         .requestMatchers("/", "/adatbazis/**", "/kapcsolat/**", "/diagram/**",
-                                "/rest/**", "/api/**", "/login", "/register").permitAll()
+                                "/rest/**", "/login", "/register").permitAll()
                         // Regisztrált látogató: Üzenetek menü
                         .requestMatchers("/uzenetek/**").hasAnyRole("USER", "ADMIN")
                         // Admin: CRUD menü
@@ -78,19 +104,21 @@ public class WebSecurityConfig {
                         .successHandler(authenticationSuccessHandler())
                         .permitAll()
                 )
+                // A REST API HTTP Basic azonosítással hívható (curl -u admin:jelszo ...)
+                .httpBasic(withDefaults())
                 // Kijelentkezés után a főoldalra kerül
                 .logout(logout -> logout
                         .logoutSuccessUrl("/?logout")
                         .permitAll()
                 )
                 .exceptionHandling(exception -> exception
+                        // REST API azonosítás nélkül: 401 Unauthorized
+                        .defaultAuthenticationEntryPointFor(apiAuthenticationEntryPoint(), WebSecurityConfig::apiKeres)
                         // Nem bejelentkezett látogató a CRUD menüt nem láthatja: főoldalra kerül
                         .defaultAuthenticationEntryPointFor(
                                 (request, response, authException) ->
                                         response.sendRedirect(request.getContextPath() + "/"),
-                                request -> request.getRequestURI()
-                                        .substring(request.getContextPath().length())
-                                        .startsWith("/crud")
+                                request -> utvonal(request).startsWith("/crud")
                         )
                         // Minden más védett oldalnál (pl. Üzenetek) a login oldalra kerül
                         .defaultAuthenticationEntryPointFor(
@@ -98,10 +126,16 @@ public class WebSecurityConfig {
                                         response.sendRedirect(request.getContextPath() + "/login"),
                                 request -> true
                         )
-                        // Bejelentkezett, de nem jogosult felhasználó (pl. USER a CRUD-on): főoldalra kerül
+                        // Bejelentkezett, de nem jogosult felhasználó (pl. USER a CRUD-on): főoldalra kerül,
+                        // a REST API-n 403 Forbidden
                         .accessDeniedHandler(
-                                (request, response, accessDeniedException) ->
-                                        response.sendRedirect(request.getContextPath() + "/")
+                                (request, response, accessDeniedException) -> {
+                                    if (apiKeres(request)) {
+                                        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                                    } else {
+                                        response.sendRedirect(request.getContextPath() + "/");
+                                    }
+                                }
                         )
                 );
         return http.build();

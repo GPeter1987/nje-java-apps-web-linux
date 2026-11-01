@@ -56,6 +56,8 @@ class FooldalTests {
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
                 .andExpect(model().attributeExists("klubok", "legertekesebbek", "osszertek", "kulfoldiArany"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Ferencvárosi TC")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Ferencvárosi TC")))
+                // A klubcsempék az Adatbázis menü klubszűrőjére (klubId paraméter) mutatnak
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("/adatbazis?klubId=")));
     }
 }
